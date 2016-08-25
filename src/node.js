@@ -2,16 +2,20 @@ class Node {
 	constructor(data, priority) {
 		this.data=data;
 		this.priority=priority;
-		this.parent=null;
-		this.left=null;
-		this.right=null;
+		this.parent=this.left=this.right=null;
 	}
 
 	appendChild(node) {
 		if(!this.left){
+			node.parent=this;
 			this.left=node;
-		}else if(!this.right){
-			this.right=node;
+			
+		}
+		else {
+			if(!this.right){
+				node.parent=this;
+				this.right=node;
+			}
 		}
 	}
 
@@ -19,25 +23,83 @@ class Node {
 		if(this.left===node){
 			this.left.parent=null;
 			this.left=null;
-		}else if(this.right===node){
-			this.right.parent=null;
-			this.right=null;
-		}else{
-			alert('node is not a child');
+		}
+		else {
+			if(this.right===node){
+				this.right.parent=null;
+				this.right=null;
+			}
+			else {
+				alert('node is not a child');
+			}
 		}
 	}
 
 	remove() {
-		if(this.parentNode){
-		var parent=this.parentNode;
-		parent.appendChild(this);
-		var child=this;
-		child.parent.removeChild(child);
+		if(this.parent){
+			var child=this;
+			this.parent.removeChild(child);
 		}
 	}
 
 	swapWithParent() {
-		
+		if(this.parent){
+			if(this.parent.left.left&&this.parent.right.left){
+				if(this.parent.parent.left.left===this){
+					this.parent.parent.right.appendChild(this.parent);
+					this.parent.parent.parent.left=null;					
+					this.parent.parent.parent.appendChild(this);
+					this.parent.right.right.left=null;
+					this.appendChild(this.parent.right.right);
+					this.parent.right.right=null;					
+				}
+				if(this.parent.parent.right.left===this){
+					this.parent.parent.left.appendChild(this.parent);
+					this.parent.parent.parent.right=null;					
+					this.parent.parent.parent.appendChild(this);					
+					this.parent.left.right.left=null;
+					
+					this.appendChild(this.parent.left.right);
+					this.parent.left.right=null;					
+				}								
+			}
+			else if(this.parent.right&&this.left){//&&!this.parent.right.left
+					this.parent.right.parent=null;
+					this.appendChild(this.parent.right);
+					this.parent.right=null;
+					this.left.parent=null;
+					this.parent.appendChild(this.left);
+					this.left=null;
+					this.parent.left=null;
+					this.appendChild(this.parent);
+					this.parent=null;
+					this.left.right.parent=null;
+					this.left.appendChild(this.left.right);
+					this.left.right=null;
+			}
+			
+			else if(this.parent.left&&this.parent.right){				
+					this.parent.left.parent=null;
+					this.appendChild(this.parent.left);
+					this.parent.left=null;
+					this.parent.right=null;
+					this.appendChild(this.parent);
+					this.parent=null;					
+			}
+			
+			else if(this.parent.parent){				
+					this.parent.parent.appendChild(this);
+					this.appendChild(this.parent.left);
+			}
+			
+			else {
+				this.parent.left=null;
+				this.appendChild(this.parent);
+				this.parent=null;
+			
+			}
+		}
+				
 	}
 }
 
