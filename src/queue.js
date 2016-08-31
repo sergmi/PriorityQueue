@@ -7,7 +7,7 @@ class PriorityQueue {
 	}
 
 	push(data, priority) {
-		/*this.push(data,priority);*/
+		this.MaxHeap.push(data,priority);
 	}
 
 	shift() {
@@ -19,7 +19,7 @@ class PriorityQueue {
 	}
 
 	isEmpty() {
-		
+			
 	}
 }
 
